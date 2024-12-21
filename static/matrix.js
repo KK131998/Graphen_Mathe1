@@ -179,10 +179,12 @@ function adjajenzmatrix(gewicht, richtung, knoten) {
         }
     }
 
-    const kreiereGraph = document.createElement('button');
-    const zufallButton = document.createElement('button');
-    kreiereGraph.textContent = 'Graph kreieren'; // Button-Text
-    zufallButton.textContent = 'Zufällig ausfüllen'; // Button-Text
+    const kreiereGraph = document.getElementById('button1');
+    const zufallButton = document.getElementById('button2');
+    const ringGraph = document.getElementById('button3');
+    const sternGraph = document.getElementById('button4'); 
+    const baumGraph = document.getElementById('button5');
+
 
     kreiereGraph.addEventListener('click', function() {
         // Passendes Array zum erstellen des Graphen schaffen 
@@ -314,9 +316,52 @@ function adjajenzmatrix(gewicht, richtung, knoten) {
                 }
             }
         }
-    })
+    });
 
+    ringGraph.addEventListener('click', function() {
+        for (var i = 1; i <= knoten; i++) {
+            for (var j = 1; j <= knoten; j++) {
+                if (j === (i % knoten) + 1 || i === (j % knoten) + 1) {
+                    document.getElementById('knoten: ' + i + j).value = 1;
+                } else {
+                    document.getElementById('knoten: ' + i + j).value = 0;
+                }
+            }
+        }
+    });
 
+    sternGraph.addEventListener('click', function() {
+        const center = 1; // Wähle den ersten Knoten als Zentrum
+        for (var i = 1; i <= knoten; i++) {
+            for (var j = 1; j <= knoten; j++) {
+                if (i === center || j === center) {
+                    if (i !== j) {
+                        document.getElementById('knoten: ' + i + j).value = 1;
+                    } else {
+                        document.getElementById('knoten: ' + i + j).value = 0;
+                    }
+                } else {
+                    document.getElementById('knoten: ' + i + j).value = 0;
+                }
+            }
+        }
+    });
+
+    baumGraph.addEventListener('click', function() {
+    // Initialisiere alle Zellen mit 0
+    for (var i = 1; i <= knoten; i++) {
+        for (var j = 1; j <= knoten; j++) {
+            document.getElementById('knoten: ' + i + j).value = 0;
+        }
+    }
+
+    // Verbinde jeden Knoten (außer dem Wurzelknoten) mit seinem Elternknoten
+    for (var i = 2; i <= knoten; i++) {
+        var parent = Math.floor(i / 2);
+        document.getElementById('knoten: ' + parent + i).value = 1;
+        document.getElementById('knoten: ' + i + parent).value = 1;
+    }
+});
 
 
     
@@ -325,9 +370,14 @@ function adjajenzmatrix(gewicht, richtung, knoten) {
     resultContainer.appendChild(table);
     resultContainer.appendChild(kreiereGraph);
     resultContainer.appendChild(zufallButton);
+    resultContainer.appendChild(ringGraph);
+    resultContainer.appendChild(sternGraph);
+    resultContainer.appendChild(baumGraph);
 
     document.body.appendChild(resultContainer);
 }
+
+
 
 adjajenzmatrix(gewicht, richtung, knoten);
 
