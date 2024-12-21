@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='graph.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Graph Visualization</h1>
+        <img src="/static/images/graph.png" alt="Graph">
+        <div class="info-container">
+            <div class="info-box">
+                <h2>Vollständig oder unvollständig
+                    <span class="tooltip">Ein vollständiger Graph ist ein Graph, in dem zwischen jedem Paar von Knoten eine Kante existiert. Das bedeutet, dass jeder Knoten direkt mit allen anderen Knoten verbunden ist</span>
+                </h2>
+                <p>{{ vollständigkeit }}</p>
+            </div>
+            <div class="info-box">
+                <h2>Eulerkreis
+                    <span class="tooltip">Ein Eulerkreis ist ein spezieller Kreis in einem Graphen, bei dem jede Kante des Graphen genau einmal durchlaufen wird und am gleichen Punkt endet, an dem er begonnen hat</span>
+                </h2>
+                <p>{{ eulerkreis }}</p>
+            </div>
+            <div class="info-box">
+                <h2>Hamiltonkreis
+                    <span class="tooltip">Ein Hamiltonkreis ist ein spezieller Kreis in einem Graphen, bei dem alle Knoten genau einmal besucht werden, und der Kreis am gleichen Knoten endet, an dem er begonnen hat.</span>
+                </h2>
+                <p>{{ hamiltonkreis }}</p>
+            </div>
+            <div class="info-box">
+                <h2>Art des Graphen
+                    <span class="tooltip">Untersucht ob es sich um einen Ring- Baum- oder Sterngraphen handelt</span>
+                </h2>
+                <p>{{ art }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
