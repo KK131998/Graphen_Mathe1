@@ -237,21 +237,22 @@ def is_stern_graph_gerichtet(G):
     return False
 
 def art_des_Graphen_finden(G):
+    ergebnis = ''
     if isinstance(G, nx.DiGraph):
         if is_ring_graph_gerichtet(G):
-            return 'Ring Graph'
+            ergebnis += 'Ring Graph   '
         elif is_stern_graph_gerichtet(G):
-            return 'Stern Graph'
-        return 'kein Stern- Baum- oder Ringgraph gefunden'
+            ergebnis += 'Stern Graph'
     elif isinstance(G, nx.Graph):
         if nx.is_tree(G):
-            return 'Baum-Graph'
-        elif is_ring_graph_ungerichtet(G):
-            return 'Ring-Graph'
-        elif is_stern_graph_ungerichtet(G):
-            return 'Stern-Graph'
-        else:
-            return 'kein Stern- Baum- oder Ringgraph gefunden'
+            ergebnis += 'Baum-Graph  '
+        if is_ring_graph_ungerichtet(G):
+            ergebnis += 'Ring-Graph  '
+        if is_stern_graph_ungerichtet(G):
+            ergebnis += 'Stern-Graph  '
+    if ergebnis == '':
+        ergebnis += 'kein Stern- Baum- oder Ringgraph gefunden'
+    return ergebnis
     #Überprüfen ob es ein Baum
     
 #Graph erstellen

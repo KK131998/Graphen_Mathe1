@@ -10,13 +10,13 @@
     <div class="container">
         <h1>Graph Visualization</h1>
         <img src="/static/images/graph.png" alt="Graph">
+        <div class="info-box">
+            <h2>Art des Graphen
+                <span class="tooltip">Untersucht ob es sich um einen Ring- Baum- oder Sterngraphen handelt</span>
+            </h2>
+            <p>{{ art }}</p>
+        </div>
         <div class="info-container">
-            <div class="info-box">
-                <h2>Vollständig oder unvollständig
-                    <span class="tooltip">Ein vollständiger Graph ist ein Graph, in dem zwischen jedem Paar von Knoten eine Kante existiert. Das bedeutet, dass jeder Knoten direkt mit allen anderen Knoten verbunden ist</span>
-                </h2>
-                <p>{{ vollständigkeit }}</p>
-            </div>
             <div class="info-box">
                 <h2>Eulerkreis
                     <span class="tooltip">Ein Eulerkreis ist ein spezieller Kreis in einem Graphen, bei dem jede Kante des Graphen genau einmal durchlaufen wird und am gleichen Punkt endet, an dem er begonnen hat</span>
@@ -29,13 +29,38 @@
                 </h2>
                 <p>{{ hamiltonkreis }}</p>
             </div>
-            <div class="info-box">
-                <h2>Art des Graphen
-                    <span class="tooltip">Untersucht ob es sich um einen Ring- Baum- oder Sterngraphen handelt</span>
-                </h2>
-                <p>{{ art }}</p>
+        <div class="info-box">
+            <h2>Dijkstra-Algorithmus </h2>
+                <label for="Startknoten"> Startknoten: </label>
+                <select name="Startknoten" id="Startknoten">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                <label for="Endknoten">Endknoten: </label>
+                <select name="Endknoten" id="Endknoten">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            <div id="dijkstra">
+            <h4> Kürzester Weg: </h4>
+            <button id="dijkstra_button"> Berechnen </button>
             </div>
         </div>
-    </div>
 </body>
 </html>
