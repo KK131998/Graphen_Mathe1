@@ -48,10 +48,9 @@ def matrix():
 @app.route('/submit-edges', methods=['POST'])
 def submit_edges():
     data = request.get_json()  # JSON-Daten vom Client empfangen
-    
     #edges anpassen
     edges_liste = data.get('edges')  # Das 'edges'-Array extrahieren
-    edges = [tuple(edge) for edge in edges_liste]
+    edges = [tuple(int(value) for value in edge) for edge in edges_liste]
     
     #knoten anpassen
     knoten = int(graph_state.knoten)
@@ -62,8 +61,11 @@ def submit_edges():
     print("Erhaltene Richtung:", graph_state.richtung) 
     print("Erhaltene Knoten:", knoten, type(knoten)) 
     
+    graph_state.edges = edges  # Speichere die Kanten im globalen Zustand
+    graph_state.knoten = knoten # Speichere die Knoten im globalen Zustand
+    
     # Graphen erstellen und Pfad des gespeicherten Graphenbildes erhalten
-    graphErstellen(graph_state.gewicht, graph_state.richtung, knoten, edges)
+    graphErstellen(graph_state.gewicht, graph_state.richtung, graph_state.knoten, graph_state.edges)
     
     # Sicherstellen, dass die Antwort im richtigen Format erfolgt
     return jsonify({"message": "Graph erfolgreich erstellt"})
@@ -77,6 +79,19 @@ def send_image(filename):
 def graph():
     return render_template('graph.html', vollständigkeit=graph_state.vollständigkeit, eulerkreis=graph_state.eulerkreis, hamiltonkreis=graph_state.hamiltonkreis, art=graph_state.art)
 
+@app.route('/submit-dijkstra', methods=['POST'])
+def submit_dijkstra():
+    data = request.get_json()  # JSON-Daten vom Client empfangen
+    data_liste = data.get('dijkstra_knoten') # Das 'dijkstra_knoten'-Array extrahieren
+    
+    startknoten = int(data_liste[0])
+    endknoten = int(data_liste[1])
+    print(type(startknoten), type(endknoten))
+    G = graphErstellen(graph_state.gewicht, graph_state.richtung, graph_state.knoten, graph_state.edges)
+    kuerzesterWeg = dijkstra_algorithmus(G, startknoten, endknoten, graph_state.gewicht)
+    # Umwandlung der Liste in einen String mit '->' als Trennzeichen
+    kuerzesterWeg = ' => '.join(map(str, kuerzesterWeg))
+    return jsonify(kuerzesterWeg=kuerzesterWeg)
 
 
 #FUNKTIONEN:
@@ -103,6 +118,8 @@ def is_complete_graph_gerichtet(G):
         return False
     else:
         return True 
+
+
 
 # Überprüfen, ob der Hamilton-Kreis vorliegt, dieser teil des hamilton überprüfung funktioniert für gerichtet und ungerichtet
 def is_hamiltonian_cycle(graph, cycle):
@@ -174,6 +191,8 @@ def find_hamiltonian_cycle_gerichtet(graph):
     
     return None  # Kein Hamiltonkreis gefunden
 
+
+
 def is_ring_graph_ungerichtet(G):
     # Schritt 1: Überprüfen, ob der Graph zusammenhängend ist
     if not nx.is_connected(G):
@@ -202,6 +221,8 @@ def is_ring_graph_gerichtet(G):
             return True
     
     return False
+
+
 
 def is_stern_graph_ungerichtet(G):
     # Der Graph muss zusammenhängend sein
@@ -236,6 +257,8 @@ def is_stern_graph_gerichtet(G):
     
     return False
 
+
+
 def art_des_Graphen_finden(G):
     ergebnis = ''
     if isinstance(G, nx.DiGraph):
@@ -254,6 +277,7 @@ def art_des_Graphen_finden(G):
         ergebnis += 'kein Stern- Baum- oder Ringgraph gefunden'
     return ergebnis
     #Überprüfen ob es ein Baum
+    
     
 #Graph erstellen
 def graphErstellen(gewicht, richtung, nodes, edges):
@@ -344,9 +368,45 @@ def graphErstellen(gewicht, richtung, nodes, edges):
     plt.savefig(image_path)
     plt.close()  # Schließe das Bild
     
-    return image_path  # Rückgabe des Bildpfad
+    return G  # Rückgabe des Bildpfad
+    
+
+def dijkstra_algorithmus(G, startknoten, endknoten, gewicht):
+    eins = graph_state.edges[0]
+    print(eins)
+    print(type(eins))
+    print(f"Startknoten: {startknoten} 'Type: {type(startknoten)}'")
+    print(f"Endknoten: {endknoten} 'Type: {type(endknoten)}'")
+    
+    # If Abfrage ob G ein gerichteter und ungerichteter Graph ist
+    if isinstance(G, nx.DiGraph):
+        #if abfrage on der G gewichtet ist
+        if gewicht == 'gewichtet':
+            print("Der Graph ist gewichtet.")
+            # Kürzesten Weg des Graphen finden mit Dijkstra
+            path = nx.shortest_path(G, source=startknoten, target=endknoten, weight='weight')
+        else:
+            print("Der Graph ist ungewichtet.")
+            # Kürzesten Weg des Graphen finden mit Dijkstra aber ohne Gewicht
+            path = nx.shortest_path(G, source=startknoten, target=endknoten)
+    else:
+        if gewicht == 'gewichtet':
+            print("Der Graph ist gewichtet.")
+            # Kürzesten Weg des Graphen finden mit Dijkstra aber er ist nicht gerichtet
+            path = nx.shortest_path(G, source=startknoten, target=endknoten, weight='weight')
+        else:
+            print("Der Graph ist ungewichtet.")
+            #Kürzesten Weg finden aber ohne Gewicht und der Graph ist nicht gerichtet
+            path = nx.shortest_path(G, source=startknoten, target=endknoten)
+    print(path)
+    return path
     
     
+
+        
+
+
+
 # Stelle sicher, dass der Server hier gestartet wird
 if __name__ == '__main__':
     app.run(debug=True)  # Server starten
